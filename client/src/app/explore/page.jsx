@@ -121,7 +121,7 @@ export default function Explore() {
                               {!table?.length && (
                                 <tr>
                                   <td colSpan={schema.columns.length} className="text-center p-2">
-                                    No data available
+                                    Variant does not overlap any regions from this dataset.
                                   </td>
                                 </tr>
                               )}
