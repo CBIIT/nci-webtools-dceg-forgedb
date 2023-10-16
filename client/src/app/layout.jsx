@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
           <meta name="keywords" content="FORGEdb" />
           <link rel="icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH}/favicon.ico`} sizes="any" />
           <GoogleAnalytics id="G-SLRTWNCE23" />
+          <Script src="https://cbiit.github.io/nci-softwaresolutions-elements/components/include-html.js"></Script>
         </head>
         <body className="d-flex flex-column vh-100">
           <Header routes={routes} />

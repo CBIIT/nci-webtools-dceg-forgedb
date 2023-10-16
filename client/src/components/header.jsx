@@ -3,6 +3,7 @@ import SiteSearch from './site-search.jsx';
 export default function Header() {
   return (
     <header>
+      <include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
       <div className="container my-2 my-md-4 mb-1 d-flex flex-wrap justify-content-between align-items-baseline">
         <a className="d-inline-block" rel="noopener noreferrer" href="https://www.cancer.gov/">
           <img src={`${process.env.NEXT_PUBLIC_BASE_PATH}/assets/nci-dceg-logo.svg`} height="60" alt="National Cancer Institute Logo" className="mw-100" />
