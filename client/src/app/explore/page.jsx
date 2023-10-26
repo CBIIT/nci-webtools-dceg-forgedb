@@ -61,11 +61,9 @@ export default function Explore() {
               {rsid && isLoading && <h1 className="fs-2 fw-light">Loading results</h1>}
               {rsid && !isLoading && (
                 <>
-                  <div className="d-flex mb-3">
-                    <div className="me-3 form-floating d-inline-block">
-                      <input className="form-control w-auto" id="search" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} autoFocus />
-                      <label htmlFor="search">Search</label>
-                    </div>
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="search">Tissue/Cell Type Filter</label>
+                    <input className="form-control w-auto rounded-0 border-0 border-bottom border-dark border-2 bg-light" id="search" placeholder="Tissue/Cell Type" value={search} onChange={(e) => setSearch(e.target.value)} autoFocus />
                   </div>
 
                   <h2 className="fs-5 fw-semibold mb-1 d-flex align-items-baseline justify-content-between">
@@ -123,7 +121,7 @@ export default function Explore() {
                               {!table?.length && (
                                 <tr>
                                   <td colSpan={schema.columns.length} className="text-center p-2">
-                                    No data available
+                                    Variant does not overlap any regions from this dataset.
                                   </td>
                                 </tr>
                               )}
