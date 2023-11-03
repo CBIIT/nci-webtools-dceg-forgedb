@@ -23,15 +23,15 @@
       "label": "CCRE Chromosome"
     },
     {
-      "name": "ccre_start",
+      "name": "ccre_start_position",
       "label": "CCRE Start Position"
     },
     {
-      "name": "ccre_end",
+      "name": "ccre_end_position",
       "label": "CCRE End Position"
     },
     {
-      "name": "ccre_center",
+      "name": "ccre_center_position",
       "label": "CCRE Center Position"
     },
     {
