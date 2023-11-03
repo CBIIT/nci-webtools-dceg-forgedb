@@ -47,6 +47,7 @@ Each dataset is available for download at the following urls:
 | forge2.forge2tf                  | v1.0    | https://forgedb.cancer.gov/api/forge2tf/v1.0/forge2tf.forgedb.csv.gz                                                       |                                                     |
 | gtex                             | v1.0    | https://forgedb.cancer.gov/api/gtex/v1.0/gtex.forgedb.csv.gz                                                               |                                                     |
 | zoonomia                         | v1.0    | https://forgedb.cancer.gov/api/zoonomia/v1.0/zoonomia.forgedb.csv.gz                                                       |                                                     |
+| encode4.crispr.sgrna             | v1.0    | https://forgedb.cancer.gov/api/encode4.crispr.sgrna/v1.0/encode4.crispr.sgrna.forgedb.csv.gz                               |                                                     |
 
 1. Clone the repository: `git clone https://github.com/CBIIT/nci-webtools-dceg-forgedb.git`
 2. Under your static file server's document root, create an `api` folder under which you wish to host the FORGEdb api.
