@@ -1,5 +1,5 @@
 {
-  "title": "CRISPR sgRNAs Targeting ENCODE4 Regulatory Elements <small>(hg19, for more details, see <a target='_blank' rel='noopener noreferrer' href='https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full'>https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full</a>)</small>",
+  "title": "CRISPR sgRNAs Targeting ENCODE4 Regulatory Elements <small>(hg38, for more details, see <a target='_blank' rel='noopener noreferrer' href='https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full'>https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full</a>)</small>",
   "shortTitle": "ENCODE4 sgRNAs",
   "columns": [
     {
