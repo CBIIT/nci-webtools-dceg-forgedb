@@ -1,10 +1,10 @@
 # FORGEdb
 
-[FORGEdb](https://forgedb.cancer.gov/) is an online tool designed to interpret genetic variants associated with diseases, focusing on variants found in genome-wide association studies (GWAS). Its purpose is to annotate the regulatory genome to identify relevant variants and target genes.
+[FORGEdb](https://forgedb.cancer.gov/) is an online tool designed to aid interpretation of genetic variants associated with diseases, for example variants analyzed in genome-wide association studies (GWAS). Its purpose is to annotate individual variants to identify relevant alleles and target genes.
 
-The platform provides integrated data on individual genetic variants, including associated regulatory elements, transcription factor binding sites, and target genes. This information is derived from a wide range of biological samples to present a thorough regulatory context of each variant at the cellular level. Data forms include Combined Annotation Dependent Depletion (CADD) scores, expression quantitative trait loci (eQTLs), activity-by-contact (ABC) interactions, and transcription factor (TF) motifs.
+The platform provides integrated data on individual genetic variants, including associated regulatory elements, transcription factor binding sites, and target genes. This information, derived from a wide range of biological samples, presents a thorough examination of the regulatory context for each variant at the tissue and cell type level. Data sources include Combined Annotation Dependent Depletion (CADD) scores, expression quantitative trait loci (eQTLs), activity-by-contact (ABC) interactions, and transcription factor (TF) motifs.
 
-Notably, FORGEdb introduces a unique scoring system, the FORGEdb score. This score evaluates the functional importance of genetic variants, aiding researchers in prioritizing variants for functional validation. It uses extensive datasets, including those from ENCODE, Roadmap Epigenomics, and BLUEPRINT consortia. With FORGEdb, researchers can expedite their analysis of genetic loci, potentially accelerating discoveries in disease-associated genetic variants.
+Notably, FORGEdb introduces a unique scoring system, the FORGEdb score. This score evaluates the functional importance of genetic variants, helping researchers prioritize variants for functional validation. It uses extensive datasets, including those from ENCODE, Roadmap Epigenomics, and BLUEPRINT consortia. With FORGEdb, researchers can quickly analyze different genomic variants and accelerate their research on disease-associated mechanisms.
 
 ### Resources
 
