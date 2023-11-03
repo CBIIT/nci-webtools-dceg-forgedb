@@ -61,7 +61,7 @@ export default function Explore() {
             <div className="col">
               {!rsid && !isLoading && <h1 className="fs-2 fw-light">Please enter an RSID to view summary-level data.</h1>}
               {rsid && isLoading && <h1 className="fs-2 fw-light">Loading results</h1>}
-              {rsid && hasNoData && !isLoading && <h1 className="fs-2 fw-light">No results were found for {rsid}</h1>}
+              {rsid && hasNoData && !isLoading && <h1 className="fs-2 fw-light">No results were found for {rsid}.</h1>}
               {rsid && !hasNoData && !isLoading && (
                 <>
                   <div className="mb-3">
