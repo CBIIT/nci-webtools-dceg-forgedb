@@ -24,15 +24,15 @@
     },
     {
       "name": "ccre_start",
-      "label": "CCRE Start"
+      "label": "CCRE Start Position"
     },
     {
       "name": "ccre_end",
-      "label": "CCRE End"
+      "label": "CCRE End Position"
     },
     {
       "name": "ccre_center",
-      "label": "CCRE Center"
+      "label": "CCRE Center Position"
     },
     {
       "name": "ccre_distance",
