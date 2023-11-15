@@ -54,5 +54,9 @@
   {
     "name": "forge2.erc2-H3-all",
     "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v1.0", "assembly": "", "url": "https://forge2.altiusinstitute.org/", "download_url": "https://forge2.altiusinstitute.org/files/forge_2.0.db", "notes": "" } }]
+  },
+  {
+    "name": "encode4.crispr.sgrna",
+    "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v2022.12.21.520137v1", "assembly": "GRCh38", "url": "https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1", "download_url": "https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1", "notes": "sgRNAs for CRISPR genome editing of ENCODE4 regulatory elements overlapping FORGEdb SNPs" } }]
   }
 ]

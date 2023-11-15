@@ -28,6 +28,8 @@ export default function Explore() {
   }));
   const forgeDbScore = getForgeDbScore(data);
   const closestGene = data?.find((d) => d.name === "closest_gene")?.originalTable?.[0];
+  const hasNoData = data?.every(d => !d.originalTable?.length)
+  console.log({data, hasNoData});
 
   return (
     <>
@@ -59,7 +61,8 @@ export default function Explore() {
             <div className="col">
               {!rsid && !isLoading && <h1 className="fs-2 fw-light">Please enter an RSID to view summary-level data.</h1>}
               {rsid && isLoading && <h1 className="fs-2 fw-light">Loading results</h1>}
-              {rsid && !isLoading && (
+              {rsid && hasNoData && !isLoading && <h1 className="fs-2 fw-light">No results were found for {rsid}.</h1>}
+              {rsid && !hasNoData && !isLoading && (
                 <>
                   <div className="mb-3">
                     <label className="form-label" htmlFor="search">Tissue/Cell Type Filter</label>

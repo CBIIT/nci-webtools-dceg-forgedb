@@ -49,7 +49,7 @@ export default function About() {
                 <li>9 = eQTL + ABC + CATO + DNase I hotspot + histone mark ChIP-seq</li>
               </ul>
               
-              <p>A more in-depth explanation of specific scores is available <a href="https://youtu.be/1QhgKfSgLZc" target="_blank" rel="noopener noreferer">here</a> (with subtitles).</p>
+              <p>A more in-depth explanation of specific scores is available <a href="https://youtu.be/kD0HDNLXE5E" target="_blank" rel="noopener noreferer">here</a> (with subtitles).</p>
               <p>To view a specific example of a SNP with a FORGEdb score of 9, the following figure highlights score details for rs1421085:</p>
               <p>Example FORGEdb results for rs1421085</p>
               <figure className="figure">

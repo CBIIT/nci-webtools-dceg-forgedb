@@ -1,0 +1,114 @@
+{
+  "title": "CRISPR sgRNAs Targeting ENCODE4 Regulatory Elements <small>(hg38, for more details, see <a target='_blank' rel='noopener noreferrer' href='https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full'>https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1.full</a>)</small>",
+  "shortTitle": "ENCODE4 CRISPR sgRNAs",
+  "columns": [
+    {
+      "name": "rsid",
+      "label": "RSID"
+    },
+    {
+      "name": "chromosome",
+      "label": "SNP Chromosome"
+    },
+    {
+      "name": "start_position",
+      "label": "SNP Start Position"
+    },
+    {
+      "name": "end_position",
+      "label": "SNP End Position"
+    },
+    {
+      "name": "ccre_chromosome",
+      "label": "CCRE Chromosome"
+    },
+    {
+      "name": "ccre_start_position",
+      "label": "CCRE Start Position"
+    },
+    {
+      "name": "ccre_end_position",
+      "label": "CCRE End Position"
+    },
+    {
+      "name": "ccre_center_position",
+      "label": "CCRE Center Position"
+    },
+    {
+      "name": "ccre_distance",
+      "label": "CCRE Distance"
+    },
+    {
+      "name": "ccre_id",
+      "label": "CCRE ID"
+    },
+    {
+      "name": "ccre_type",
+      "label": "CCRE Type"
+    },
+    {
+      "name": "n",
+      "label": "N"
+    },
+    {
+      "name": "grna_sequence",
+      "label": "gRNA Sequence"
+    },
+    {
+      "name": "grna_chromosome",
+      "label": "gRNA Chromosome"
+    },
+    {
+      "name": "grna_start",
+      "label": "gRNA Start"
+    },
+    {
+      "name": "grna_strand",
+      "label": "gRNA Strand"
+    },
+    {
+      "name": "distance_1_matches",
+      "label": "Distance 1 Matches"
+    },
+    {
+      "name": "distance_2_matches",
+      "label": "Distance 2 Matches"
+    },
+    {
+      "name": "distance_3_matches",
+      "label": "Distance 3 Matches"
+    },
+    {
+      "name": "distance_4_matches",
+      "label": "Distance 4 Matches"
+    },
+    {
+      "name": "cutting_efficiency",
+      "label": "Cutting Efficiency"
+    },
+    {
+      "name": "specificity",
+      "label": "Specificity"
+    },
+    {
+      "name": "synthesis_sequence",
+      "label": "Synthesis Sequence"
+    },
+    {
+      "name": "cutting_position",
+      "label": "Cutting Position"
+    },
+    {
+      "name": "low_specificity",
+      "label": "Low Specificity"
+    },
+    {
+      "name": "poly4n",
+      "label": "Poly4N"
+    },
+    {
+      "name": "poly4t",
+      "label": "Poly4T"
+    }
+  ]
+}
