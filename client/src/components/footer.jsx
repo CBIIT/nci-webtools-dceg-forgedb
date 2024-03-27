@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="flex-grow-0">
-      <div class="bg-primary text-light py-3 pb-1">
+      <div class="bg-primary-blue-footer text-light py-3 pb-1">
         <div class="container">
           <p class="h6">References</p>
           <ol>
