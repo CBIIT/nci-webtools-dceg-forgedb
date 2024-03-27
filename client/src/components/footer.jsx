@@ -1,25 +1,56 @@
 export default function Footer() {
   return (
     <footer className="flex-grow-0">
+      <div class="bg-primary text-light py-3 pb-1">
+        <div class="container">
+          <p class="h6">References</p>
+          <ol>
+            <li>
+              Breeze, C.E., Haugen, E., Gutierrez-Arcelus, M., Yao, X.,
+              Teschendorff, A., Beck, S., Dunham, I., et al. (2024). FORGEdb: a
+              tool for identifying candidate functional variants and uncovering
+              target genes and mechanisms for complex diseases. Genome Biol. 25,
+              3. 10.1186/s13059-023-03126-1.
+            </li>
+          </ol>
+        </div>
+      </div>
       <div className="bg-primary-dark text-light py-4">
         <div className="container">
           <div className="mb-4">
-            <a href="https://dceg.cancer.gov/" target="_blank" rel="noopener noreferrer" className="text-light h4 mb-1">
+            <a
+              href="https://dceg.cancer.gov/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-light h4 mb-1"
+            >
               Division of Cancer Epidemiology and Genetics
             </a>
             <div className="h6">
               at the{" "}
-              <a className="text-light fw-semibold" target="_blank" rel="noopener noreferrer" href="https://www.cancer.gov/">
+              <a
+                className="text-light fw-semibold"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://www.cancer.gov/"
+              >
                 National Cancer Institute
               </a>
             </div>
           </div>
           <div className="row">
             <div className="col-lg-4 mb-4">
-              <div className="h5 mb-1 font-weight-light">CONTACT INFORMATION</div>
+              <div className="h5 mb-1 font-weight-light">
+                CONTACT INFORMATION
+              </div>
               <ul className="list-unstyled mb-0">
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="mailto:FORGEdbWebAdmin@mail.nih.gov">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="mailto:FORGEdbWebAdmin@mail.nih.gov"
+                  >
                     Contact Us
                   </a>
                 </li>
@@ -29,22 +60,42 @@ export default function Footer() {
               <div className="h5 mb-1 font-weight-light">POLICIES</div>
               <ul className="list-unstyled mb-0">
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="https://www.cancer.gov/policies/accessibility">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.cancer.gov/policies/accessibility"
+                  >
                     Accessibility
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="https://www.cancer.gov/policies/disclaimer">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.cancer.gov/policies/disclaimer"
+                  >
                     Disclaimer
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="https://www.cancer.gov/policies/foia">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.cancer.gov/policies/foia"
+                  >
                     FOIA
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html"
+                  >
                     HHS Vulnerability Disclosure
                   </a>
                 </li>
@@ -54,22 +105,42 @@ export default function Footer() {
               <div className="h5 mb-1 font-weight-light">MORE INFORMATION</div>
               <ul className="list-unstyled mb-0">
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="http://www.hhs.gov/">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="http://www.hhs.gov/"
+                  >
                     U.S. Department of Health and Human Services
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="http://www.nih.gov/">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="http://www.nih.gov/"
+                  >
                     National Institutes of Health
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="https://www.cancer.gov/">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.cancer.gov/"
+                  >
                     National Cancer Institute
                   </a>
                 </li>
                 <li>
-                  <a className="text-light" target="_blank" rel="noopener noreferrer" href="http://usa.gov/">
+                  <a
+                    className="text-light"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="http://usa.gov/"
+                  >
                     USA.gov
                   </a>
                 </li>
@@ -77,7 +148,9 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="text-center">NIH ... Turning Discovery Into Health ®</div>
+        <div className="text-center">
+          NIH ... Turning Discovery Into Health ®
+        </div>
       </div>
     </footer>
   );
