@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="flex-grow-0">
       <div class="bg-primary-blue-footer text-light py-3 pb-1">
         <div class="container">
-          <p class="h6">References</p>
+          <p class="h6">Reference</p>
           <ol>
             <li>
               Breeze, C.E., Haugen, E., Gutierrez-Arcelus, M., Yao, X.,
