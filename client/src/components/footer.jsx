@@ -49,7 +49,7 @@ export default function Footer() {
                     className="text-light"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="mailto:FORGEdbWebAdmin@mail.nih.gov"
+                    href="mailto:NCIForgeDBWebAdmin@mail.nih.gov"
                   >
                     Contact Us
                   </a>
