@@ -7,20 +7,17 @@ export default function Footer() {
           <ol>
             <li>
               Breeze, C.E., Haugen, E., Gutierrez-Arcelus, M., Yao, X.,
-              Teschendorff, A., Beck, S., Dunham, I., et al. (2024).{" "}
+              Teschendorff, A., Beck, S., Dunham, I., et al. (2024). FORGEdb: a
+              tool for identifying candidate functional variants and uncovering
+              target genes and mechanisms for complex diseases.{" "}
               <a
                 href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-023-03126-1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-light mb-1"
               >
-                <u>
-                  FORGEdb: a tool for identifying candidate functional variants
-                  and uncovering target genes and mechanisms for complex
-                  diseases.{" "}
-                </u>
+                <u> Genome Biol. 25, 3. 10.1186/s13059-023-03126-1.</u>
               </a>
-              Genome Biol. 25, 3. 10.1186/s13059-023-03126-1.
             </li>
           </ol>
         </div>
