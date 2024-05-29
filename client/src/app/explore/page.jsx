@@ -122,7 +122,7 @@ export default function Explore() {
                     <input
                       className="form-control w-auto rounded-0 border-0 border-bottom border-dark border-2 bg-light"
                       id="search"
-                      placeholder="Tissue/Cell Type"
+                      placeholder="Tissue/Cell Type/Annotation Filter"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       autoFocus
