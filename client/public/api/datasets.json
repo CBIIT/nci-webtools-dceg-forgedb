@@ -56,6 +56,14 @@
     "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v1.0", "assembly": "", "url": "https://forge2.altiusinstitute.org/", "download_url": "https://forge2.altiusinstitute.org/files/forge_2.0.db", "notes": "" } }]
   },
   {
+    "name": "lung",
+    "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v1.0", "assembly": "", "url": "https://pubmed.ncbi.nlm.nih.gov/38906146/", "download_url": "https://pubmed.ncbi.nlm.nih.gov/38906146/", "notes": "High-throughput characterization of functional variants highlights heterogeneity and polygenicity underlying lung cancer susceptibility" } }]
+  },
+  {
+    "name": "melanoma",
+    "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v1.0", "assembly": "", "url": "https://pubmed.ncbi.nlm.nih.gov/36423637/", "download_url": "https://pubmed.ncbi.nlm.nih.gov/36423637/", "notes": "Massively parallel reporter assays and variant scoring identified functional variants and target genes for melanoma loci and highlighted cell-type specificity" } }]
+  },
+  {
     "name": "encode4.crispr.sgrna",
     "forgedb_versions": [{ "version": "v1.0", "metadata": { "original_version": "v2022.12.21.520137v1", "assembly": "GRCh38", "url": "https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1", "download_url": "https://www.biorxiv.org/content/10.1101/2022.12.21.520137v1", "notes": "sgRNAs for CRISPR genome editing of ENCODE4 regulatory elements overlapping FORGEdb SNPs" } }]
   }

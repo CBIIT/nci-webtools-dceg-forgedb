@@ -1,0 +1,70 @@
+{
+  "title": "Melanoma-associated variants tested by massively parallel reporter assays in melanoma and normal cell lines (hg19, for more details, see DOI: 10.1016/j.ajhg.2022.11.006)",
+  "shortTitle": "Melanoma",
+  "columns": [
+    {
+      "name": "rsid",
+      "label": "RSID"
+    },
+    {
+      "name": "Variant.ID.(hg19)",
+      "label": "Variant ID (hg19)",
+      "description": "chromosome:position (hg19)"
+    },
+    {
+      "name": "GWAS_Locus",
+      "label": "GWAS Locus",
+      "description": "Melanoma GWAS loci; DOI: 10.1016/j.ajhg.2022.11.006"
+    },
+    {
+      "name": "ref",
+      "label": "ref",
+      "description": "reference allele"
+    },
+    {
+      "name": "alt",
+      "label": "alt",
+      "description": "alternative allele"
+    },
+    {
+      "name": "ref_vs_alt_FDR.(UACC903_melanoma)",
+      "label": "ref_vs_alt_FDR (UACC903_melanoma)",
+      "description": "allelic effect FDR (two-sided Wald test) in UACC903 melanoma cell line"
+    },
+    {
+      "name": "log2_FC_alt.(UACC903_melanoma)",
+      "label": "log2_FC_alt (UACC903_melanoma)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in UACC903"
+    },
+    {
+      "name": "ref_vs_alt_FDR.(melanocyte)",
+      "label": "ref_vs_alt_FDR (melanocyte)",
+      "description": "allelic effect FDR (two-sided Wald test) in immortalized human primary melanocytes"
+    },
+    {
+      "name": "log2_FC_alt.(melanocyte)",
+      "label": "log2_FC_alt (melanocyte)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in melanocytes"
+    },
+    {
+      "name": "Activator.(UACC903_melanoma)",
+      "label": "Activator (UACC903_melanoma)",
+      "description": "Either allele shows higher normalized expression than the average of all the variants tested in UACC903"
+    },
+    {
+      "name": "Activator.(melanocyte)",
+      "label": "Activator (melanocyte)",
+      "description": "Either allele shows higher normalized expression than the average of all the variants tested in melanocytes"
+    },
+    {
+      "name": "Cell.type.specificity",
+      "label": "Cell type specificity",
+      "description": "Based on cell-type-specific MPRA score, activator score, and differentially expressed TF binding affinity"
+    },
+    {
+      "name": "Integrative.score.from.Long.et.al",
+      "label": "Integrative score from Long et al",
+      "description": "Score combining melanoma/melanocyte MPRA, activator, open chromatin region, histone, FINEMAP/POLYFUN, and motif scores"
+    }
+  ]
+}

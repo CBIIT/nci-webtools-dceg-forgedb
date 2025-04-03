@@ -1,0 +1,96 @@
+{
+  "title": "Lung Cancer - associated variants tested by massively parallel reporter assays in lung cells - A549 & H520 (hg19, for more details, see DOI: 10.1016/j.ajhg.2024.05.021)",
+  "shortTitle": "Lung Cancer",
+  "columns": [
+    {
+      "name": "rsid",
+      "label": "RSID",
+      "description": "rsID"
+    },
+    {
+      "name": "Variant.ID.(hg19)",
+      "label": "Variant.ID (hg19)",
+      "description": "chromosome:position (hg19)"
+    },
+    {
+      "name": "GWAS_Locus",
+      "label": "GWAS Locus",
+      "description": "Lung cancer loci based on three GWASs; DOI: 10.1016/j.ajhg.2024.05.021"
+    },
+    {
+      "name": "ref",
+      "label": "ref",
+      "description": "reference allele"
+    },
+    {
+      "name": "alt",
+      "label": "alt",
+      "description": "alternative allele"
+    },
+    {
+      "name": "ALT.vs.REF.FDR.(A549_DMSO)",
+      "label": "ALT vs REF FDR (A549_DMSO)",
+      "description": "allelic effect FDR (two-sided Wald test) in A549 lung adenocarcinoma cell line with DMSO control"
+    },
+    {
+      "name": "ALT.vs.REF.log2FC.(A549_DMSO)",
+      "label": "ALT vs REF log2FC (A549_DMSO)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in A549 with DMSO"
+    },
+    {
+      "name": "ALT.vs.REF.FDR.(A549_BaP)",
+      "label": "ALT vs REF  FDR (A549_BaP)",
+      "description": "allelic effect FDR (two-sided Wald test) in A549 with Benzo[a]pyrene treatment"
+    },
+    {
+      "name": "ALT.vs.REF.log2FC.(A549_BaP)",
+      "label": "ALT vs REF log2FC (A549_BaP)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in A549 with Benzo[a]pyrene"
+    },
+    {
+      "name": "ALT.vs.REF.FDR.(H520_DMSO)",
+      "label": "ALT vs REF FDR (H520_DMSO)",
+      "description": "allelic effect FDR (two-sided Wald test) in H520 lung squamous cell carcinoma cell line with DMSO control"
+    },
+    {
+      "name": "ALT.vs.REF.log2FC.(H520_DMSO)",
+      "label": "ALT vs REF log2FC (H520_DMSO)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in H520 with DMSO"
+    },
+    {
+      "name": "ALT.vs.REF.FDR.(H520_BaP)",
+      "label": "ALT vs REF FDR (H520_BaP)",
+      "description": "allelic effect FDR (two-sided Wald test) in H520 with Benzo[a]pyrene treatment"
+    },
+    {
+      "name": "ALT.vs.REF.log2FC.(H520_BaP)",
+      "label": "ALT vs REF log2FC (H520_BaP)",
+      "description": "log2 fold difference of allelic transcriptional activity normalized to DNA input in H520 with Benzo[a]pyrene"
+    },
+    {
+      "name": "Activator.A549",
+      "label": "Activator A549",
+      "description": "Either allele shows higher normalized expression than the average of all the variants tested in A549"
+    },
+    {
+      "name": "Activator.H520",
+      "label": "Activator H520",
+      "description": "Either allele shows higher normalized expression than the average of all the variants tested in H520"
+    },
+    {
+      "name": "Cell-type.regression.interaction.FDR",
+      "label": "Cell-type regression interaction FDR",
+      "description": "FDR of regression testing (Allele*Cell_Type) interaction between A549-DMSO condition and H520-DMSO condition"
+    },
+    {
+      "name": "Cell.type.specificity",
+      "label": "Cell type specificity",
+      "description": "Cell type with stronger allelic effect at interaction FDR > 0.01"
+    },
+    {
+      "name": "Integrative.score.from.Long.et.al.",
+      "label": "Integrative score from Long et al.",
+      "description": "Score combining MPRA allelic effect, activator, TF motif and chromatin features; DOI: 10.1016/j.ajhg.2024.05.021"
+    }
+  ]
+}
