@@ -12,7 +12,8 @@ export default function RootLayout({ children }) {
     { title: "Explore", path: "/explore" },
     { title: "API Access", path: "/api-access" },
     { title: "About", path: "/about" },
-  ];
+    { title: "How to cite FORGEdb", path: "/citations" },
+  ]
 
   return (
     <html lang="en">
