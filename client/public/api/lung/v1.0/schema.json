@@ -1,5 +1,5 @@
 {
-  "title": "Lung Cancer - associated variants tested by massively parallel reporter assays in lung cells - A549 & H520 (hg19, for more details, see DOI: 10.1016/j.ajhg.2024.05.021)",
+  "title": "Lung Cancer - associated variants tested by massively parallel reporter assays in lung cells - A549 & H520 (hg19, for more details, see <a target='_blank' rel='noopener noreferrer' href='https://pubmed.ncbi.nlm.nih.gov/38906146/'>DOI: 10.1016/j.ajhg.2024.05.021</a>)",
   "shortTitle": "Lung Cancer",
   "columns": [
     {
@@ -15,7 +15,7 @@
     {
       "name": "GWAS_Locus",
       "label": "GWAS Locus",
-      "description": "Lung cancer loci based on three GWASs; DOI: 10.1016/j.ajhg.2024.05.021"
+      "description": "Lung cancer loci based on three GWASs"
     },
     {
       "name": "ref",
@@ -90,7 +90,7 @@
     {
       "name": "Integrative.score.from.Long.et.al.",
       "label": "Integrative score from Long et al.",
-      "description": "Score combining MPRA allelic effect, activator, TF motif and chromatin features; DOI: 10.1016/j.ajhg.2024.05.021"
+      "description": "Score combining MPRA allelic effect, activator, TF motif and chromatin features"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Melanoma-associated variants tested by massively parallel reporter assays in melanoma and normal cell lines (hg19, for more details, see DOI: 10.1016/j.ajhg.2022.11.006)",
+  "title": "Melanoma-associated variants tested by massively parallel reporter assays in melanoma and normal cell lines (hg19, for more details, see <a target='_blank' rel='noopener noreferrer' href='https://pubmed.ncbi.nlm.nih.gov/36423637/'>DOI: 10.1016/j.ajhg.2022.11.006</a>)",
   "shortTitle": "Melanoma",
   "columns": [
     {
@@ -14,7 +14,7 @@
     {
       "name": "GWAS_Locus",
       "label": "GWAS Locus",
-      "description": "Melanoma GWAS loci; DOI: 10.1016/j.ajhg.2022.11.006"
+      "description": "Melanoma GWAS loci"
     },
     {
       "name": "ref",
