@@ -12,8 +12,13 @@ export default function RootLayout({ children }) {
     { title: "Home", path: "/" },
     { title: "Explore", path: "/explore" },
     { title: "API Access", path: "/api-access" },
-    { title: "About", path: "/about" },
-    { title: "How to cite FORGEdb", path: "/citations" },
+    {
+      title: "About",
+      dropdown: [
+        { title: "FORGEdb", path: "/about" },
+        { title: "How to cite FORGEdb", path: "/citations" },
+      ],
+    },
   ];
 
   return (
