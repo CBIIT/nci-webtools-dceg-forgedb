@@ -1,6 +1,6 @@
 {
   "title": "Lung Cancer-associated variants tested by MPRAs in lung cells - A549 & H520 (for more details, see <a target='_blank' rel='noopener noreferrer' href='https://doi.org/10.1016/j.ajhg.2024.05.021'>https://doi.org/10.1016/j.ajhg.2024.05.021</a>)",
-  "shortTitle": "Lung Cancer",
+  "shortTitle": "Lung Cancer MPRA",
   "columns": [
     {
       "name": "rsid",
