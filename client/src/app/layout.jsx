@@ -1,5 +1,6 @@
 "use client";
 import Script from "next/script";
+import { Suspense } from "react";
 import GoogleAnalytics from "@/components/analytics";
 import Header from "@/components/header";
 import Navbar from "@/components/navbar";
@@ -11,7 +12,13 @@ export default function RootLayout({ children }) {
     { title: "Home", path: "/" },
     { title: "Explore", path: "/explore" },
     { title: "API Access", path: "/api-access" },
-    { title: "About", path: "/about" },
+    {
+      title: "About",
+      dropdown: [
+        { title: "FORGEdb", path: "/about" },
+        { title: "How to cite FORGEdb", path: "/citations" },
+      ],
+    },
   ];
 
   return (
@@ -40,7 +47,7 @@ export default function RootLayout({ children }) {
           }}
         >
           <Navbar routes={routes} />
-          {children}
+          <Suspense>{children}</Suspense>
         </main>
         <Footer />
       </body>

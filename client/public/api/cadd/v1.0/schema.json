@@ -24,7 +24,7 @@
     },
     {
       "name": "phred_score",
-      "label": "Phred Score"
+      "label": "Phred-like Scaled CADD Score"
     }
   ]
 }

@@ -3,6 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr/immutable";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import { fetchBatch, getForgeDbScore, getRowFilter } from "./utils.js";
 
 export default function Explore() {
@@ -188,16 +190,35 @@ export default function Explore() {
                                   (
                                     { name, label, description, style },
                                     index
-                                  ) => (
-                                    <th
-                                      key={`${name}_${index}`}
-                                      className="small text-muted fw-bold bg-light text-uppercase"
-                                      title={description}
-                                      style={style}
-                                    >
-                                      {label}
-                                    </th>
-                                  )
+                                  ) =>
+                                    description ? (
+                                      <OverlayTrigger
+                                        key={`${name}_${index}`}
+                                        overlay={
+                                          <Tooltip
+                                            id={`${name}_${index}_tooltip`}
+                                          >
+                                            {description}
+                                          </Tooltip>
+                                        }
+                                      >
+                                        <th
+                                          className="small text-muted fw-bold bg-light text-uppercase"
+                                          title={description}
+                                          style={style}
+                                        >
+                                          {label}
+                                        </th>
+                                      </OverlayTrigger>
+                                    ) : (
+                                      <th
+                                        key={`${name}_${index}`}
+                                        className="small text-muted fw-bold bg-light text-uppercase"
+                                        style={style}
+                                      >
+                                        {label}
+                                      </th>
+                                    )
                                 )}
                               </tr>
                             </thead>
