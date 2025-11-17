@@ -1,0 +1,249 @@
+name: Deploy FORGEdb
+
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: "Tier to deploy to"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+      no_cache:
+        description: "Build Docker image without cache"
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'client/**'
+      - 'database/**'
+      - 'docker/**'
+      - '.github/workflows/deploy.yml'
+
+env:
+  APP: forgedb
+  AWS_REGION: us-east-1
+  TZ: America/New_York
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Deploy:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.tier || 'dev' }}
+    env:
+      TIER: ${{ inputs.tier || 'dev' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set dynamic environment variables
+        run: |
+          echo "PARAMETER_PATH=/analysistools/${TIER}/${{ env.APP }}" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: ${{ secrets.CICD_ROLE_ARN }}
+          role-session-name: ${{ env.TIER }}-${{ env.APP }}-deploy-${{ github.ref_name }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Retrieve AWS SSM parameters
+        uses: dkershner6/aws-ssm-getparameters-action@v2
+        with:
+          parameterPairs: |
+            ${{ env.PARAMETER_PATH }}/cloudfront_distribution_id = CLOUDFRONT_DISTRIBUTION_ID,
+            ${{ env.PARAMETER_PATH }}/cloudfront_distribution_domain_name = CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME,
+            ${{ env.PARAMETER_PATH }}/cloudfront_s3_bucket = CLOUDFRONT_S3_BUCKET,
+            ${{ env.PARAMETER_PATH }}/cloudfront_s3_data_bucket = CLOUDFRONT_S3_DATA_BUCKET,
+            ${{ env.PARAMETER_PATH }}/subnet_ids = SUBNET_IDS,
+            ${{ env.PARAMETER_PATH }}/security_group_ids = SECURITY_GROUP_IDS,
+            ${{ env.PARAMETER_PATH }}/efs_filesystem_id = EFS_FILESYSTEM_ID,
+            ${{ env.PARAMETER_PATH }}/efs_access_point_id = EFS_ACCESS_POINT_ID,
+            ${{ env.PARAMETER_PATH }}/ecs_cluster = ECS_CLUSTER,
+            ${{ env.PARAMETER_PATH }}/data_import_task = DATA_IMPORT_TASK,
+            ${{ env.PARAMETER_PATH }}/data_import_task_cpu_units = DATA_IMPORT_TASK_CPU_UNITS,
+            ${{ env.PARAMETER_PATH }}/data_import_task_memory_units = DATA_IMPORT_TASK_MEMORY_UNITS,
+            ${{ env.PARAMETER_PATH }}/role_arn = ROLE_ARN
+          withDecryption: "false"
+
+      - name: Get AWS account ID
+        id: aws-account
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "account_id=$ACCOUNT_ID" >> $GITHUB_OUTPUT
+
+      - name: Set deployment variables
+        id: vars
+        run: |
+          IMAGE_TIER=$([ "${{ env.TIER }}" = "prod" ] || [ "${{ env.TIER }}" = "stage" ] && echo "release" || echo "development")
+          DATETIME=$(date +%Y%m%d%H%M%S)
+          GIT_TAG=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
+          APP_GIT_TAG=$(echo "$GIT_TAG" | sed 's/^v//')
+          
+          echo "image_tier=$IMAGE_TIER" >> $GITHUB_OUTPUT
+          echo "datetime=$DATETIME" >> $GITHUB_OUTPUT
+          echo "app_git_tag=$APP_GIT_TAG" >> $GITHUB_OUTPUT
+          echo "no_cache=${{ inputs.no_cache || 'false' }}" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Build client resources
+        working-directory: ./client
+        env:
+          CI: false
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          if [ -d "client/out" ]; then
+            echo "✅ Build output found at: client/out/"
+            ls -la client/out/ | head -10
+          else
+            echo "❌ Error: Build output not found at client/out/"
+            echo "Checking directories:"
+            ls -la client/
+            exit 1
+          fi
+
+      - name: Sync client resources to S3
+        run: |
+          echo "Syncing from: client/out/"
+          aws s3 sync \
+            --delete \
+            --region ${{ env.AWS_REGION }} \
+            client/out/ \
+            s3://${{ env.CLOUDFRONT_S3_BUCKET }}/
+
+      - name: Create CloudFront invalidation
+        run: |
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+          
+          echo "CloudFront invalidation created: ${INVALIDATION_ID}"
+          echo "Distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
+          echo "Domain: ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push data import Docker image
+        id: build-push
+        env:
+          IMAGE_REPOSITORY: ${{ steps.aws-account.outputs.account_id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.APP }}
+          IMAGE_TAG: ${{ steps.vars.outputs.image_tier }}-data-import-${{ steps.vars.outputs.app_git_tag }}-${{ steps.vars.outputs.datetime }}
+          IMAGE_TAG_LATEST: ${{ steps.vars.outputs.image_tier }}-data-import-latest
+        run: |
+          DOCKER_BUILDKIT=$([ "${{ steps.vars.outputs.no_cache }}" = "true" ] && echo "0" || echo "1")
+          
+          # Build arguments
+          BUILD_ARGS="--pull -t $IMAGE_REPOSITORY:$IMAGE_TAG -t $IMAGE_REPOSITORY:$IMAGE_TAG_LATEST"
+          BUILD_ARGS="$BUILD_ARGS --build-arg BUILDKIT_INLINE_CACHE=1"
+          
+          # Cache handling
+          if [ "${{ steps.vars.outputs.no_cache }}" != "true" ]; then
+            BUILD_ARGS="$BUILD_ARGS --cache-from $IMAGE_REPOSITORY:$IMAGE_TAG_LATEST"
+          else
+            BUILD_ARGS="$BUILD_ARGS --no-cache"
+          fi
+          
+          # Build the image
+          docker build $BUILD_ARGS \
+            -f docker/data-import.dockerfile \
+            .
+          
+          # Push both tags
+          docker push $IMAGE_REPOSITORY:$IMAGE_TAG
+          docker push $IMAGE_REPOSITORY:$IMAGE_TAG_LATEST
+          
+          # Save image info for ECS task definition (using latest tag to match Ansible template)
+          echo "image_uri=$IMAGE_REPOSITORY:$IMAGE_TAG_LATEST" >> $GITHUB_OUTPUT
+          echo "image_uri_tagged=$IMAGE_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Update ECS task definition
+        id: task-def
+        run: |
+          # Check if task definition template exists
+          if [ ! -f "deployment/build-deploy/ecs-task-definitions/${{ env.APP }}/data-import.yml" ]; then
+            echo "❌ Error: Task definition template not found!"
+            echo "Expected location: deployment/build-deploy/ecs-task-definitions/${{ env.APP }}/data-import.yml"
+            exit 1
+          fi
+          
+          TASK_DEF_TEMPLATE="deployment/build-deploy/ecs-task-definitions/${{ env.APP }}/data-import.yml"
+          TASK_DEF_OUTPUT="${TASK_DEF_TEMPLATE}.tmp"
+          
+          # Copy template to temporary file for substitution
+          cp "$TASK_DEF_TEMPLATE" "$TASK_DEF_OUTPUT"
+          
+          # Convert tier to uppercase for tags
+          TIER_UPPER=$(echo "${{ env.TIER }}" | tr '[:lower:]' '[:upper:]')
+          
+          # Substitute all placeholders
+          sed -i "s|DATA_IMPORT_TASK_PLACEHOLDER|${{ env.DATA_IMPORT_TASK }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|DATA_IMPORT_TASK_CPU_UNITS_PLACEHOLDER|${{ env.DATA_IMPORT_TASK_CPU_UNITS }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|DATA_IMPORT_TASK_MEMORY_UNITS_PLACEHOLDER|${{ env.DATA_IMPORT_TASK_MEMORY_UNITS }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|ROLE_ARN_PLACEHOLDER|${{ env.ROLE_ARN }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|EFS_FILESYSTEM_ID_PLACEHOLDER|${{ env.EFS_FILESYSTEM_ID }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|EFS_ACCESS_POINT_ID_PLACEHOLDER|${{ env.EFS_ACCESS_POINT_ID }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|IMAGE_URI_PLACEHOLDER|${{ steps.build-push.outputs.image_uri }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|TIER_PLACEHOLDER|${{ env.TIER }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|APP_PLACEHOLDER|${{ env.APP }}|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|TIER_UPPER_PLACEHOLDER|$TIER_UPPER|g" "$TASK_DEF_OUTPUT"
+          sed -i "s|AWS_REGION_PLACEHOLDER|${{ env.AWS_REGION }}|g" "$TASK_DEF_OUTPUT"
+          
+          # Register task definition
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-yaml file://$TASK_DEF_OUTPUT \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          
+          echo "task_definition_arn=$TASK_DEF_ARN" >> $GITHUB_OUTPUT
+          echo "Registered task definition: $TASK_DEF_ARN"
+
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tier:** ${{ env.TIER }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image Tier:** ${{ steps.vars.outputs.image_tier }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image:** ${{ steps.build-push.outputs.image_uri }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 Bucket:** ${{ env.CLOUDFRONT_S3_BUCKET }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **CloudFront Distribution:** ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.task-def.outputs.task_definition_arn }}" ]; then
+            echo "- **ECS Task Definition:** ${{ steps.task-def.outputs.task_definition_arn }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- **Build:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY

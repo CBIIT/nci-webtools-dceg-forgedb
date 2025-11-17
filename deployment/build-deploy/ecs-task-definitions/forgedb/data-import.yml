@@ -1,0 +1,43 @@
+family: "DATA_IMPORT_TASK_PLACEHOLDER"
+networkMode: awsvpc
+cpu: "DATA_IMPORT_TASK_CPU_UNITS_PLACEHOLDER"
+memory: "DATA_IMPORT_TASK_MEMORY_UNITS_PLACEHOLDER"
+executionRoleArn: "ROLE_ARN_PLACEHOLDER"
+taskRoleArn: "ROLE_ARN_PLACEHOLDER"
+requiresCompatibilities:
+  - FARGATE
+volumes:
+  - name: data
+    efsVolumeConfiguration:
+      fileSystemId: "EFS_FILESYSTEM_ID_PLACEHOLDER"
+      authorizationConfig: 
+        accessPointId: "EFS_ACCESS_POINT_ID_PLACEHOLDER"
+        iam: ENABLED
+      transitEncryption: ENABLED
+containerDefinitions:
+  - name: data-import
+    image: "IMAGE_URI_PLACEHOLDER"
+    mountPoints:
+      - sourceVolume: data
+        containerPath: "/data"
+        readOnly: false
+    logConfiguration:
+      logDriver: awslogs
+      options:
+        awslogs-group: "/analysistools/TIER_PLACEHOLDER/APP_PLACEHOLDER/data-import"
+        awslogs-region: "AWS_REGION_PLACEHOLDER"
+        awslogs-stream-prefix: data-import
+tags:
+  - key: Project
+    value: "APP_PLACEHOLDER"
+  - key: ApplicationName
+    value: "APP_PLACEHOLDER"
+  - key: ResourceName
+    value: "TIER_PLACEHOLDER-APP_PLACEHOLDER-data-import-ecs-task"
+  - key: EnvironmentTier
+    value: "TIER_UPPER_PLACEHOLDER"
+  - key: ResourceFunction
+    value: compute
+  - key: Creator
+    value: CF
+
