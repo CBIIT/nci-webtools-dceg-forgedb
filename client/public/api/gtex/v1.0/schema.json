@@ -1,6 +1,6 @@
 {
   "title": "GTEx v8 cis-eQTL information <small>(for more details, see <a target='_blank' rel='noopener noreferrer' href='https://gtexportal.org/home/'>https://gtexportal.org/home/</a>)</small>",
-  "shortTitle": "GTEx v8 cis-eQTLs",
+  "shortTitle": "GTEx cis-eQTLs",
   "columns": [
     {
       "name": "rsid",
