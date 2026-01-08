@@ -10,7 +10,7 @@ export default function ApiAccess() {
         <div className="row">
           <div className="col">
             <article>
-              <h1 className="fs-1 fw-light">API Access</h1>
+              <h1 className="fs-1 fw-light">API Accessss</h1>
               <hr/>
               <SwaggerUI spec={spec} />
             </article>
