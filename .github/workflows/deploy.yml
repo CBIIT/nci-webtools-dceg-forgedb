@@ -1,169 +1,169 @@
 name: Deploy FORGEdb
-
 on:
-    workflow_dispatch:
-        inputs:
-            tier:
-                description: "Deploy environment"
-                required: true
-                default: "dev"
-                type: choice
-                options:
-                    - dev
-                    - qa
-                    - stage
-                    - prod
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: "Deploy environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - qa
+          - stage
+          - prod
 
 permissions:
-    id-token: write
-    contents: read
+  id-token: write
+  contents: read
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        environment: ${{ inputs.tier }}
-        env:
-            APP: forgedb
-            AWS_REGION: us-east-1
-            TZ: America/New_York
-            TIER: ${{ inputs.tier }}
-            CICD_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-cicd
+  deploy:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.tier }}
+    env:
+      APP: forgedb
+      AWS_REGION: us-east-1
+      TZ: America/New_York
+      TIER: ${{ inputs.tier }}
+      CICD_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6.0.1
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.1
+        with:
+          fetch-depth: 0
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v5.1.1
-              with:
-                  role-to-assume: ${{ env.CICD_ROLE_ARN }}
-                  role-session-name: ${{ env.TIER }}-${{ env.APP }}-deploy-${{ github.ref_name }}
-                  aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          role-to-assume: ${{ env.CICD_ROLE_ARN }}
+          role-session-name: ${{ env.TIER }}-${{ env.APP }}-deploy-${{ github.ref_name }}
+          aws-region: ${{ env.AWS_REGION }}
 
-            - name: Set dynamic environment variables
-              run: |
-                  TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-                  GIT_TAG=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
-                  IMAGE_TIER=$([ "$TIER" = "prod" ] || [ "$TIER" = "stage" ] && echo "release" || echo "development")
-                  REPO=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$APP
+      - name: Set dynamic environment variables
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+          GIT_TAG=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
+          IMAGE_TIER=$([ "$TIER" = "prod" ] || [ "$TIER" = "stage" ] && echo "release" || echo "development")
+          REPO=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$APP
 
-                  echo "IMAGE_REPOSITORY=$REPO" >> $GITHUB_ENV
-                  echo "DATA_IMPORT_IMAGE=$REPO:$IMAGE_TIER-data-import-$GIT_TAG-$TIMESTAMP" >> $GITHUB_ENV
-                  echo "DATA_IMPORT_IMAGE_LATEST=$REPO:$IMAGE_TIER-data-import-latest" >> $GITHUB_ENV
-                  echo "TIER_UPPER=${TIER^^}" >> $GITHUB_ENV
+          echo "IMAGE_REPOSITORY=$REPO" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE=$REPO:$IMAGE_TIER-data-import-$GIT_TAG-$TIMESTAMP" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE_LATEST=$REPO:$IMAGE_TIER-data-import-latest" >> $GITHUB_ENV
+          echo "TIER_UPPER=${TIER^^}" >> $GITHUB_ENV
 
-            - name: Retrieve SSM parameters
-              run: |
-                  PARAMETER_PATH="/analysistools/${TIER}/${APP}"
+      - name: Retrieve SSM parameters
+        run: |
+          PARAMETER_PATH="/analysistools/${TIER}/${APP}"
 
-                  # Define parameters to retrieve (SSM name = ENV_VAR_NAME)
-                  declare -A PARAMS=(
-                    ["cloudfront_distribution_id"]="CLOUDFRONT_DISTRIBUTION_ID"
-                    ["cloudfront_distribution_domain_name"]="CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME"
-                    ["cloudfront_s3_bucket"]="CLOUDFRONT_S3_BUCKET"
-                    ["cloudfront_s3_data_bucket"]="CLOUDFRONT_S3_DATA_BUCKET"
-                    ["subnet_ids"]="SUBNET_IDS"
-                    ["security_group_ids"]="SECURITY_GROUP_IDS"
-                    ["efs_filesystem_id"]="EFS_FILESYSTEM_ID"
-                    ["efs_access_point_id"]="EFS_ACCESS_POINT_ID"
-                    ["ecs_cluster"]="ECS_CLUSTER"
-                    ["data_import_task"]="DATA_IMPORT_TASK"
-                    ["data_import_task_cpu_units"]="DATA_IMPORT_TASK_CPU_UNITS"
-                    ["data_import_task_memory_units"]="DATA_IMPORT_TASK_MEMORY_UNITS"
-                    ["role_arn"]="ROLE_ARN"
-                  )
+          # Define parameters to retrieve (SSM name = ENV_VAR_NAME)
+          declare -A PARAMS=(
+            ["cloudfront_distribution_id"]="CLOUDFRONT_DISTRIBUTION_ID"
+            ["cloudfront_distribution_domain_name"]="CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME"
+            ["cloudfront_s3_bucket"]="CLOUDFRONT_S3_BUCKET"
+            ["cloudfront_s3_data_bucket"]="CLOUDFRONT_S3_DATA_BUCKET"
+            ["subnet_ids"]="SUBNET_IDS"
+            ["security_group_ids"]="SECURITY_GROUP_IDS"
+            ["efs_filesystem_id"]="EFS_FILESYSTEM_ID"
+            ["efs_access_point_id"]="EFS_ACCESS_POINT_ID"
+            ["ecs_cluster"]="ECS_CLUSTER"
+            ["data_import_task"]="DATA_IMPORT_TASK"
+            ["data_import_task_cpu_units"]="DATA_IMPORT_TASK_CPU_UNITS"
+            ["data_import_task_memory_units"]="DATA_IMPORT_TASK_MEMORY_UNITS"
+            ["role_arn"]="ROLE_ARN"
+          )
 
-                  # Retrieve each parameter and export to environment
-                  for ssm_name in "${!PARAMS[@]}"; do
-                    env_var="${PARAMS[$ssm_name]}"
-                    value=$(aws ssm get-parameter \
-                      --name "${PARAMETER_PATH}/${ssm_name}" \
-                      --with-decryption \
-                      --query "Parameter.Value" \
-                      --output text)
-                    echo "${env_var}=${value}" >> $GITHUB_ENV
-                    echo "Retrieved ${ssm_name} -> ${env_var}"
-                  done
+          # Retrieve each parameter and export to environment
+          for ssm_name in "${!PARAMS[@]}"; do
+            env_var="${PARAMS[$ssm_name]}"
+            value=$(aws ssm get-parameter \
+              --name "${PARAMETER_PATH}/${ssm_name}" \
+              --with-decryption \
+              --query "Parameter.Value" \
+              --output text)
+            echo "${env_var}=${value}" >> $GITHUB_ENV
+            echo "Retrieved ${ssm_name} -> ${env_var}"
+          done
 
-            - name: Install client dependencies
-              working-directory: ./client
-              run: npm ci
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm ci
 
-            - name: Build client resources
-              working-directory: ./client
-              run: npm run build
+      - name: Build client resources
+        working-directory: ./client
+        run: npm run build
 
-            - name: Sync client resources to S3
-              run: |
-                  aws s3 sync \
-                    --delete \
-                    --region ${{ env.AWS_REGION }} \
-                    client/out/ \
-                    s3://${{ env.CLOUDFRONT_S3_BUCKET }}/
+      - name: Sync client resources to S3
+        run: |
+          aws s3 sync \
+            --delete \
+            --region ${{ env.AWS_REGION }} \
+            client/out/ \
+            s3://${{ env.CLOUDFRONT_S3_BUCKET }}/
 
-            - name: Create CloudFront invalidation
-              run: |
-                  INVALIDATION_ID=$(aws cloudfront create-invalidation \
-                    --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-                    --paths "/*" \
-                    --query 'Invalidation.Id' \
-                    --output text)
+      - name: Create CloudFront invalidation
+        run: |
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
 
-                  echo "CloudFront invalidation created: ${INVALIDATION_ID}"
-                  echo "Distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
-                  echo "Domain: ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}"
+          echo "CloudFront invalidation created: ${INVALIDATION_ID}"
+          echo "Distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
+          echo "Domain: ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}"
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3.12.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.12.0
 
-            - name: Create and use a new builder instance
-              run: |
-                  docker buildx create --name mybuilder --use
+      - name: Create and use a new builder instance
+        run: |
+          docker buildx create --name mybuilder --use
 
-            - name: Login to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v2.0.1
-              with:
-                  mask-password: true
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+        with:
+          mask-password: true
 
-            - name: Build and push data-import image
-              uses: docker/build-push-action@v6.18.0
-              with:
-                  context: .
-                  file: docker/data-import.dockerfile
-                  pull: true
-                  push: true
-                  tags: |
-                      ${{ env.DATA_IMPORT_IMAGE }}
-                      ${{ env.DATA_IMPORT_IMAGE_LATEST }}
-                  cache-from: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:data-import-cache
-                  cache-to: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:data-import-cache,image-manifest=true,oci-mediatypes=true,mode=max
+      - name: Build and push data-import image
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: .
+          file: docker/data-import.dockerfile
+          pull: true
+          push: true
+          tags: |
+            ${{ env.DATA_IMPORT_IMAGE }}
+            ${{ env.DATA_IMPORT_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.DATA_IMPORT_IMAGE_LATEST }}
+          cache-to: type=inline
 
-            - name: Substitute task definition variables
-              run: |
-                  echo "Substituting task definition variables"
-                  envsubst < .github/aws/data-import.yml > data-import.yml
+      - name: Substitute task definition variables
+        run: |
+          echo "Substituting task definition variables"
+          envsubst < .github/aws/data-import.yml > data-import.yml
 
-            - name: Print rendered task definition
-              run: |
-                  echo "Rendered Task Definition:"
-                  cat data-import.yml
+      - name: Print rendered task definition
+        run: |
+          echo "Rendered Task Definition:"
+          cat data-import.yml
 
-            - name: Register ECS task definition
-              run: |
-                  aws ecs register-task-definition --cli-input-yaml file://data-import.yml
+      - name: Register ECS task definition
+        run: |
+          aws ecs register-task-definition --cli-input-yaml file://data-import.yml
 
-            - name: Deployment summary
-              run: |
-                  echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Tier:** ${{ env.TIER }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Docker Image:** ${{ env.DATA_IMPORT_IMAGE }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Environment:** ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **S3 Bucket:** ${{ env.CLOUDFRONT_S3_BUCKET }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **CloudFront Distribution:** ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **ECS Task Definition:** ${{ env.DATA_IMPORT_TASK }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Build:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tier:** ${{ env.TIER }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image:** ${{ env.DATA_IMPORT_IMAGE }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 Bucket:** ${{ env.CLOUDFRONT_S3_BUCKET }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **CloudFront Distribution:** ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **ECS Task Definition:** ${{ env.DATA_IMPORT_TASK }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
