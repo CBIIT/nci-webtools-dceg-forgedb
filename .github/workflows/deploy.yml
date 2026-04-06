@@ -1,4 +1,8 @@
 name: Deploy FORGEdb
+permissions:
+  id-token: write
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
@@ -13,10 +17,6 @@ on:
           - stage
           - prod
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   deploy:
     timeout-minutes: 60
@@ -30,10 +30,7 @@ jobs:
       CICD_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6.0.1
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6.0.2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5.1.1
@@ -45,13 +42,10 @@ jobs:
       - name: Set dynamic environment variables
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-          GIT_TAG=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
-          IMAGE_TIER=$([ "$TIER" = "prod" ] || [ "$TIER" = "stage" ] && echo "release" || echo "development")
           REPO=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$APP
 
-          echo "IMAGE_REPOSITORY=$REPO" >> $GITHUB_ENV
-          echo "DATA_IMPORT_IMAGE=$REPO:$IMAGE_TIER-data-import-$GIT_TAG-$TIMESTAMP" >> $GITHUB_ENV
-          echo "DATA_IMPORT_IMAGE_LATEST=$REPO:$IMAGE_TIER-data-import-latest" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE=$REPO:data-import-${{ github.ref_name }}-$TIMESTAMP" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE_LATEST=$REPO:data-import-latest" >> $GITHUB_ENV
           echo "TIER_UPPER=${TIER^^}" >> $GITHUB_ENV
 
       - name: Retrieve SSM parameters
@@ -116,7 +110,7 @@ jobs:
           echo "Domain: ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}"
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.12.0
+        uses: docker/setup-buildx-action@v4.0.0
 
       - name: Create and use a new builder instance
         run: |
@@ -129,7 +123,7 @@ jobs:
           mask-password: true
 
       - name: Build and push data-import image
-        uses: docker/build-push-action@v6.18.0
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           file: docker/data-import.dockerfile
@@ -160,10 +154,4 @@ jobs:
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Tier:** ${{ env.TIER }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Image:** ${{ env.DATA_IMPORT_IMAGE }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment:** ${{ env.CLOUDFRONT_DISTRIBUTION_DOMAIN_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **S3 Bucket:** ${{ env.CLOUDFRONT_S3_BUCKET }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **CloudFront Distribution:** ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **ECS Task Definition:** ${{ env.DATA_IMPORT_TASK }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Build:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
