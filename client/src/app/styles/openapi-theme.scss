@@ -10,3 +10,58 @@
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
   background-color: #2a71a5 !important;
 }
+
+/* Section 508 color-contrast fixes (NCIATWP-9362).
+   Swagger UI ships several text colors that fall below the WCAG AA 4.5:1
+   threshold against their backgrounds. Darken them so the API Access
+   documentation meets contrast requirements. */
+
+/* "Execute" button: white text on #4990e2 (3.29:1) -> use dark text */
+.swagger-ui .btn.execute {
+  color: #000000 !important;
+}
+
+/* "Cancel" button text/border (#ff6060 on near-white = 2.9:1) */
+.swagger-ui .btn.cancel,
+.swagger-ui .try-out__btn.cancel {
+  color: #b00020 !important;
+  border-color: #b00020 !important;
+}
+
+/* Parameter location labels e.g. "(path)" (#808080 on #eff7ff = 3.65:1) */
+.swagger-ui .parameter__in,
+.swagger-ui .parameter__extension {
+  color: #1b1b1b !important;
+}
+
+/* Light-gray secondary text throughout operations, parameters, models and tabs */
+.swagger-ui .parameter__type,
+.swagger-ui .parameter__deprecated,
+.swagger-ui .prop-format,
+.swagger-ui .response-col_links,
+.swagger-ui .opblock-summary-path__deprecated,
+.swagger-ui .model .property.primitive,
+.swagger-ui .model-title__text,
+.swagger-ui .tab li,
+.swagger-ui .opblock-description-wrapper,
+.swagger-ui .markdown p,
+.swagger-ui .renderedMarkdown p,
+.swagger-ui .info .base-url {
+  color: #454545 !important;
+}
+
+/* Placeholder text in "Try it out" inputs */
+.swagger-ui input::placeholder,
+.swagger-ui textarea::placeholder {
+  color: #595959 !important;
+}
+
+/* Inline-styled code-sample colors that fall below AA on the dark code background */
+.swagger-ui .highlight-code pre span[style*="color: rgb(211, 99, 99)"],
+.swagger-ui .microlight span[style*="color: rgb(211, 99, 99)"] {
+  color: #ff8080 !important;
+}
+.swagger-ui .highlight-code pre span[style*="color: rgb(136, 136, 136)"],
+.swagger-ui .microlight span[style*="color: rgb(136, 136, 136)"] {
+  color: #b3b3b3 !important;
+}
