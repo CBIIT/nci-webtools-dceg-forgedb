@@ -28,7 +28,7 @@ WORKDIR ${FORGEDB_FOLDER}
 
 COPY database/package*.json ${FORGEDB_FOLDER}
 
-RUN npm install
+RUN npm ci
 
 COPY database ${FORGEDB_FOLDER}
 
