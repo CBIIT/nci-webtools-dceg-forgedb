@@ -10,16 +10,19 @@
     "bootstrap-icons": "^1.11.1",
     "clsx": "^2.0.0",
     "encoding": "^0.1.13",
-    "next": "^14.2.35",
+    "next": "^15.5.24",
     "react": "18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "18.2.0",
     "recoil": "^0.7.7",
     "sass": "^1.69.5",
-    "swagger-ui-react": "5.9.1",
+    "swagger-ui-react": "^5.32.14",
     "swr": "^2.2.4"
   },
   "devDependencies": {
     "eslint": "^8.53.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.26"
   }
 }
