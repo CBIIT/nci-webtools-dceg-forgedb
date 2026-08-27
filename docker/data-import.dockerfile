@@ -16,7 +16,6 @@ RUN dnf -y update \
 # silently building the app against the wrong major.
 RUN node -v | grep -qE '^v24\.' \
  && npm install -g npm@latest \
- && npm update -g \
  && node -v \
  && npm -v
 
