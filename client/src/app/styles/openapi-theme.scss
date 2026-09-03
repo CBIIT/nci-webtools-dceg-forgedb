@@ -56,6 +56,12 @@
   color: #595959 !important;
 }
 
+/* "Download" buttons (curl command, response body, model example) ship white
+   text on #7d8293 (3.83:1). Darken the background so it clears AA (6.76:1). */
+.swagger-ui .download-contents {
+  background: #565b6c !important;
+}
+
 /* Inline-styled code-sample colors that fall below AA on the dark code background */
 .swagger-ui .highlight-code pre span[style*="color: rgb(211, 99, 99)"],
 .swagger-ui .microlight span[style*="color: rgb(211, 99, 99)"] {
