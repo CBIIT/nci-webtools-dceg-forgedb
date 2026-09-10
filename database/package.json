@@ -10,8 +10,11 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.445.0",
+    "@aws-sdk/client-s3": "^3.1118.0",
     "csv": "^6.3.5",
     "dotenv": "^16.3.1",
     "p-queue": "^7.4.1"
