@@ -44,8 +44,8 @@ jobs:
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           REPO=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$APP
 
-          echo "DATA_IMPORT_IMAGE=$REPO:data-import-${{ github.ref_name }}-$TIMESTAMP" >> $GITHUB_ENV
-          echo "DATA_IMPORT_IMAGE_LATEST=$REPO:data-import-latest" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE=$REPO:data-import-${{ env.TIER }}-$TIMESTAMP" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE_LATEST=$REPO:data-import-${{ env.TIER }}-latest" >> $GITHUB_ENV
           echo "TIER_UPPER=${TIER^^}" >> $GITHUB_ENV
 
       - name: Retrieve SSM parameters
